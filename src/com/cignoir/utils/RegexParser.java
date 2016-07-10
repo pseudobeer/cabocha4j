@@ -37,4 +37,34 @@ public class RegexParser {
 		}
 		return result;
 	}
+
+	public static String convertToOldXML(String input) {
+		if (input.contains("sentence>")) return input;
+		if (input.contains("<chunk")) return input;
+		if (input.contains("</chunk>")) return input;
+
+		Matcher matcher = Pattern.compile(
+				"(feature=\\\"([^\"\\,]*),([^\"\\,]*),([^\"\\,]*),([^\"\\,]*),([^\"\\,]*),([^\"\\,]*),(([^\"\\,])*))(,([^\"\\,]*),([^\"\\,]*)\\\")",
+				Pattern.DOTALL).matcher(input);
+		String result = "";
+		if (matcher.find()) {
+			result = matcher.replaceAll("read=\"$11\" base=\"$8\" pos=\"$2-$3-$4\" ctype=\"\" cform=\"\" ne=\"0\"");
+		} else {
+			matcher = Pattern.compile(
+					"(feature=\\\"([^\"\\,]*),([^\"\\,]*),([^\"\\,]*),([^\"\\,]*),([^\"\\,]*),([^\"\\,]*),([^\"\\,]*)\\\"\\>([^<]*))",
+					Pattern.DOTALL).matcher(input);
+
+			if (matcher.find()) {
+				result = matcher.replaceAll("read=\"$9\" base=\"$8\" pos=\"$2-$3-$4\" ctype=\"\" cform=\"\" ne=\"0\">$9");
+			}
+		}
+
+		matcher = Pattern.compile("(\\-\\*)|(\\*)", Pattern.DOTALL).matcher(result);
+		if (matcher.find()) {
+			result = matcher.replaceAll("");
+		}
+
+		return result;
+
+	}
 }

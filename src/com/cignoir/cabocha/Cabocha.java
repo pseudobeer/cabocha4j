@@ -13,6 +13,7 @@ import com.cignoir.node.Chunk;
 import com.cignoir.node.Sentence;
 import com.cignoir.node.Token;
 import com.cignoir.utils.CabochaUtils;
+import com.cignoir.utils.RegexParser;
 
 
 
@@ -119,6 +120,7 @@ public class Cabocha {
 		String line;
 		List<String> result = new ArrayList<String>();
 		while ((line = br.readLine()) != null) {
+			line = RegexParser.convertToOldXML(line);
 			result.add(line);
 			System.out.println(line);
 		}
